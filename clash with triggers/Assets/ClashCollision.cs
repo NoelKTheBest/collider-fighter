@@ -29,9 +29,18 @@ public class ClashCollision : MonoBehaviour
 
             if (col != null)
             {
-                midPoint = GetLine(col.bounds);
-                fxAnim.SetActive(true);
-                fxAnim.transform.position = midPoint;
+				if ((Vector2)col.bounds.size == box.size)
+				{
+					midPoint = GetLine(col.bounds);
+					fxAnim.SetActive(true);
+					fxAnim.transform.position = midPoint;
+				}
+				else
+				{
+					midPoint = FindOtherRectangle(col.bounds);
+					fxAnim.SetActive(true);
+					fxAnim.transform.position = midPoint;
+				}
             }
         }
     }
@@ -51,42 +60,50 @@ public class ClashCollision : MonoBehaviour
 
         return midpoint;
     }
-
-    // Use later
-    Vector2 FindMidpoint(Bounds collidingBox, Vector2 line)
+	
+    Vector2 FindOtherRectangle(Bounds collidingBox)//, Vector2 line)
     {
+        Vector3 boxCenter = box.bounds.center;
+        
+		Vector2 collisionLine = new Vector2(collidingBox.center.x - boxCenter.x,
+            collidingBox.center.y - boxCenter.y);
+		Debug.DrawLine(box.bounds.center, collidingBox.center, Color.cyan);
+		
         Vector3 maxBounds = box.bounds.max;
         Vector3 minBounds = box.bounds.min;
 
-        Debug.Log("max: " +  maxBounds);
-        Debug.Log("min: " + minBounds);
+        //Debug.Log("max: " +  maxBounds);
+        //Debug.Log("min: " + minBounds);
 
-        Debug.Log("center of other: " + collidingBox.center);
+        //Debug.Log("center of other: " + collidingBox.center);
 
-        if (maxBounds.x < collidingBox.center.x)
+        if (boxCenter.x < collidingBox.center.x)
         {
             xMax = maxBounds.x;
             xMin = collidingBox.min.x;
         }
-        else if (maxBounds.x > collidingBox.center.x)
+        else if (boxCenter.x > collidingBox.center.x)
         {
             xMax = collidingBox.max.x;
             xMin = minBounds.x;
         }
 
-        if (maxBounds.y < collidingBox.center.y)
+        if (boxCenter.y < collidingBox.center.y)
         {
             yMax = maxBounds.y;
             yMin = collidingBox.min.y;
         }
-        else if (maxBounds.y > collidingBox.center.y)
+        else if (boxCenter.y > collidingBox.center.y)
         {
             yMax = collidingBox.max.y;
             yMin = minBounds.y;
         }
 
+		Vector2 midpoint = new Vector2((xMin + xMax) / 2, (yMin + yMax) / 2);
+		
+		// Bounds other = new Bounds();
         Debug.DrawLine(new Vector2(xMin, yMin), new Vector2(xMax, yMax), Color.magenta);
-        return new Vector2(0, 0);
+        return midpoint;
     }
 
     private void OnDrawGizmos()
