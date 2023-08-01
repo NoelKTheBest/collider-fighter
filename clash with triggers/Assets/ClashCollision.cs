@@ -45,6 +45,7 @@ public class ClashCollision : MonoBehaviour
         }
     }
     
+    // If the boxes are the same size, this method is used
     Vector2 GetLine(Bounds collidingBox)
     {
         Vector3 boxCenter = box.bounds.center;
@@ -54,13 +55,11 @@ public class ClashCollision : MonoBehaviour
         Debug.DrawLine(box.bounds.center, collidingBox.center, Color.cyan);
         Vector2 midpoint = new Vector2((boxCenter.x + collidingBox.center.x) / 2,
             (boxCenter.y + collidingBox.center.y) / 2);
-        //Debug.DrawLine(collisionLine, collisionLine, Color.yellow);
-        //Debug.Log("line components: " + (collidingBox.center - box.bounds.center));
-        //Debug.Log("line: " + collisionLine);
 
         return midpoint;
     }
 	
+    // If the boxes have different sizes, this method is used
     Vector2 FindOtherRectangle(Bounds collidingBox)//, Vector2 line)
     {
         Vector3 boxCenter = box.bounds.center;
@@ -72,31 +71,67 @@ public class ClashCollision : MonoBehaviour
         Vector3 maxBounds = box.bounds.max;
         Vector3 minBounds = box.bounds.min;
 
-        //Debug.Log("max: " +  maxBounds);
-        //Debug.Log("min: " + minBounds);
+        #region Notes
+        // This has changed to max x > colliding max x and min x < colliding min x
+        // Debug.Log("max x is less than colliding max x: " + (maxBounds.x > collidingBox.max.x) + ", " 
+        //    + "min x is greater than colliding min x: " + (minBounds.x < collidingBox.min.x));
+        #endregion
 
-        //Debug.Log("center of other: " + collidingBox.center);
-
-        if (boxCenter.x < collidingBox.center.x)
+        // check to see if the colliding box is completely overlapping one of the horizontal sides of our box
+        if (maxBounds.x > collidingBox.max.x && minBounds.x < collidingBox.min.x)
         {
+            #region Notes
+            // with this block of code, I have been checking to see if the the bigger box was overlapping the collider
+            //  however, the bigger box in this case whis this box. The one that this script is attached to
+            //  this means that in order to check the original condition as outlined in the debug.log statement above,
+            //  we need to attach this script to the smaller box.
+            #endregion
+
             xMax = maxBounds.x;
-            xMin = collidingBox.min.x;
-        }
-        else if (boxCenter.x > collidingBox.center.x)
-        {
-            xMax = collidingBox.max.x;
             xMin = minBounds.x;
         }
+        else if (maxBounds.x < collidingBox.max.x && minBounds.x > collidingBox.min.x)
+        {
+            // xMax = collidingBox.max.x;
+            // xMin = collidingBox.min.x;
 
-        if (boxCenter.y < collidingBox.center.y)
+            // Do the opposite of the above code block
+        }
+        // otherwise run the usual min max determining code
+        else
+        {
+            if (boxCenter.x < collidingBox.center.x)
+            {
+
+                xMax = maxBounds.x;
+                xMin = collidingBox.min.x;
+            }
+            else if (boxCenter.x > collidingBox.center.x)
+            {
+                xMax = collidingBox.max.x;
+                xMin = minBounds.x;
+            }
+        }
+
+        // check to see if the colliding box is completely overlapping one of the vertical sides of our box
+        if (maxBounds.y > collidingBox.max.y && minBounds.y < collidingBox.min.y)
         {
             yMax = maxBounds.y;
-            yMin = collidingBox.min.y;
-        }
-        else if (boxCenter.y > collidingBox.center.y)
-        {
-            yMax = collidingBox.max.y;
             yMin = minBounds.y;
+        }
+        // otherwise run the usual min max determining code
+        else
+        {
+            if (boxCenter.y < collidingBox.center.y)
+            {
+                yMax = maxBounds.y;
+                yMin = collidingBox.min.y;
+            }
+            else if (boxCenter.y > collidingBox.center.y)
+            {
+                yMax = collidingBox.max.y;
+                yMin = minBounds.y;
+            }
         }
 
 		Vector2 midpoint = new Vector2((xMin + xMax) / 2, (yMin + yMax) / 2);
