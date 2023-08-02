@@ -77,7 +77,7 @@ public class ClashCollision : MonoBehaviour
         //    + "min x is greater than colliding min x: " + (minBounds.x < collidingBox.min.x));
         #endregion
 
-        // check to see if the colliding box is completely overlapping one of the horizontal sides of our box
+        // check to see if our box is completely overlapping one of the horizontal sides of the colliding box
         if (maxBounds.x > collidingBox.max.x && minBounds.x < collidingBox.min.x)
         {
             #region Notes
@@ -87,22 +87,20 @@ public class ClashCollision : MonoBehaviour
             //  we need to attach this script to the smaller box.
             #endregion
 
-            xMax = maxBounds.x;
-            xMin = minBounds.x;
+            xMax = collidingBox.max.x;
+            xMin = collidingBox.min.x;
         }
+        // check to see if the colliding box is completely overlapping one of the horizontal sides of our box
         else if (maxBounds.x < collidingBox.max.x && minBounds.x > collidingBox.min.x)
         {
-            // xMax = collidingBox.max.x;
-            // xMin = collidingBox.min.x;
-
-            // Do the opposite of the above code block
+            xMax = maxBounds.x;
+            xMin = minBounds.x;
         }
         // otherwise run the usual min max determining code
         else
         {
             if (boxCenter.x < collidingBox.center.x)
             {
-
                 xMax = maxBounds.x;
                 xMin = collidingBox.min.x;
             }
@@ -113,8 +111,14 @@ public class ClashCollision : MonoBehaviour
             }
         }
 
-        // check to see if the colliding box is completely overlapping one of the vertical sides of our box
+        // check to see if our box is completely overlapping one of the horizontal sides of the colliding box
         if (maxBounds.y > collidingBox.max.y && minBounds.y < collidingBox.min.y)
+        {
+            yMax = collidingBox.max.y;
+            yMin = collidingBox.min.y;
+        }
+        // check to see if the colliding box is completely overlapping one of the horizontal sides of our box
+        else if (maxBounds.y < collidingBox.max.y && minBounds.y > collidingBox.min.y)
         {
             yMax = maxBounds.y;
             yMin = minBounds.y;
