@@ -25,12 +25,7 @@ public class Warrior_Run : StateMachineBehaviour
     {
         if (Input.GetAxisRaw("Horizontal") != 0)
         {
-            // gives direction and velocity
             rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, 0f);
-
-            // displaces and moves around
-            //rb.MovePosition(new Vector2(animator.transform.position.x + Input.GetAxisRaw("Horizontal") * Time.fixedDeltaTime * speed,
-            //    animator.transform.position.y));
             
             if (Input.GetAxisRaw("Horizontal") > 0)
             {

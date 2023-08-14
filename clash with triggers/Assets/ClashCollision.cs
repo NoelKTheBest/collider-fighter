@@ -60,7 +60,7 @@ public class ClashCollision : MonoBehaviour
     }
 	
     // If the boxes have different sizes, this method is used
-    Vector2 FindOtherRectangle(Bounds collidingBox)//, Vector2 line)
+    Vector2 FindOtherRectangle(Bounds collidingBox)
     {
         Vector3 boxCenter = box.bounds.center;
         
@@ -71,22 +71,9 @@ public class ClashCollision : MonoBehaviour
         Vector3 maxBounds = box.bounds.max;
         Vector3 minBounds = box.bounds.min;
 
-        #region Notes
-        // This has changed to max x > colliding max x and min x < colliding min x
-        // Debug.Log("max x is less than colliding max x: " + (maxBounds.x > collidingBox.max.x) + ", " 
-        //    + "min x is greater than colliding min x: " + (minBounds.x < collidingBox.min.x));
-        #endregion
-
         // check to see if our box is completely overlapping one of the horizontal sides of the colliding box
         if (maxBounds.x > collidingBox.max.x && minBounds.x < collidingBox.min.x)
         {
-            #region Notes
-            // with this block of code, I have been checking to see if the the bigger box was overlapping the collider
-            //  however, the bigger box in this case whis this box. The one that this script is attached to
-            //  this means that in order to check the original condition as outlined in the debug.log statement above,
-            //  we need to attach this script to the smaller box.
-            #endregion
-
             xMax = collidingBox.max.x;
             xMin = collidingBox.min.x;
         }
@@ -140,7 +127,6 @@ public class ClashCollision : MonoBehaviour
 
 		Vector2 midpoint = new Vector2((xMin + xMax) / 2, (yMin + yMax) / 2);
 		
-		// Bounds other = new Bounds();
         Debug.DrawLine(new Vector2(xMin, yMin), new Vector2(xMax, yMax), Color.magenta);
         return midpoint;
     }
